@@ -19,5 +19,17 @@ class WumpusWorldGen():
                 else:
                     row.append('s')
             grid.append(row)
-        print(grid)
+
+        # adds gold to the board
+        done = False
+        while not done:
+            row = int(random.uniform(0, size))
+            col = int(random.uniform(0, size))
+            if grid[row][col] == 's':
+                grid[row][col] = 'g'
+                done = True
+
+        for i in range(size):
+            print(grid[i])
+
         return grid

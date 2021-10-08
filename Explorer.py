@@ -1,6 +1,6 @@
 
 class Explorer():
-    def __init__(self):
+    def __init__(self, grid):
         pass
 
     def action(self):
