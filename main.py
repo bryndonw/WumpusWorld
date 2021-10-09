@@ -1,3 +1,4 @@
+from Explorer import Explorer
 from WumpusWorldGen import WumpusWorldGen
 from Explorer import Explorer
 import random
