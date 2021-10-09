@@ -1,12 +1,12 @@
 
 class InferenceSystem():
     def __init__(self):
-        pass
+        self.KB =
 
-    def updateKB(self, currPos, inference):
-        return knowledgeBase
+    def updateKB(self, rowloc, colloc, percepts):
+        return self.KB
 
-    def bestAction(self, currPos, KB):
+    def bestAction(self, rowloc, colloc):
         return action
 
     def unify(self, x, y , z):
