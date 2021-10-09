@@ -1,10 +1,14 @@
 
 class InferenceSystem():
     def __init__(self):
-        self.KB =
+        #self.KB =
+        pass
 
     def updateKB(self, rowloc, colloc, percepts):
         return self.KB
+
+    def updateKBshot(self):
+        pass
 
     def bestAction(self, rowloc, colloc):
         return action

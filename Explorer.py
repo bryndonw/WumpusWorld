@@ -1,4 +1,8 @@
+import random
+
 from InferenceSystem import InferenceSystem
+
+import numpy as np
 
 class Explorer():
     def __init__(self, grid):
@@ -9,18 +13,13 @@ class Explorer():
         self.move = 0
         self.shoot = False
 
-        pass
-
-
     def action(self, curr_pos, next_pos, act):
         # act is either turn_left, turn_right, shoot, or move
         # curr_pos and next_pos are structured (row, column)
         # 0,0 is top left of board
-        print(act)
         self.move += 1
 
         if act == 'shoot':
-            print('shoot')
             return curr_pos
         elif act == 'turn_left':
             if self.facing == 1:
@@ -79,8 +78,12 @@ class Explorer():
             return next_pos
 
     def sense(self, rowloc, colloc):
-        print(self.grid[rowloc][colloc])
         senses = []
+        if self.shoot:
+            senses = self.shot(rowloc, colloc)
+            self.shoot = False
+            return senses
+
         checks = [[rowloc + 1, colloc], [rowloc - 1, colloc], [rowloc, colloc + 1], [rowloc, colloc - 1]]
         for check in checks:
             if check[0] < len(self.grid) and check[0] >= 0 and check[1] < len(self.grid) and check[1] >= 0:
@@ -96,25 +99,99 @@ class Explorer():
             senses = 'bump'
         return senses
 
+    def shot(self, rowloc, colloc):
+        if self.facing == 1:
+            row = list(range(rowloc - 1, 0, -1))
+            col = [colloc for i in range(len(row))]
+        elif self.facing == 2:
+            col = list(range(colloc + 1, len(self.grid)))
+            row = [rowloc for i in range(len(col))]
+        elif self.facing == 3:
+            row = list(range(rowloc + 1, 0))
+            col = [colloc for i in range(len(row))]
+        elif self.facing == 4:
+            col = list(range(colloc - 1, 0, -1))
+            row = [rowloc for i in range(len(col))]
+        test = np.array(list(zip(row, col)))
+
+        for loc in test:
+            if 'o' in self.grid[loc[0]][loc[1]]:
+                break
+            elif 'w' in self.grid[loc[0]][loc[1]]:
+                if self.grid[loc[0]][loc[1]] == 'w':
+                    self.grid[loc[0]][loc[1]] = 'f'
+                else:
+                    self.grid[loc[0]][loc[1]] = 'g'
+                return 'scream'
+        return []
+
 
 
 
     def reactiveAgent(self, rowloc, colloc):
+        prevrow = rowloc
+        prevcol = colloc
+        arrow = .05
+        safe = .3
         while True:
             percepts = self.sense(rowloc, colloc)
             if percepts == 'dead':
+                print("dead")
                 return self.move
             elif percepts == 'win':
+                print('won')
                 return self.move + 1
             elif percepts == 'bump':
-                pass #player returns to previous location NEED TO STORE PREV
-            elif percepts == []:
-                pass #
+                location = self.action([rowloc, colloc], [prevrow, prevcol], 'move')
+                self.move -= 1  #moving to wall and away from wall are counted, this should just be 1 move
+            prob = random.uniform(0,1)
+            if percepts == []:
+                if prob > arrow:
+                    nextmove = random.randint(0,3)
+                    if nextmove == 0:
+                        if rowloc + 1 < len(self.grid):
+                            location = self.action([rowloc, colloc], [rowloc + 1, colloc], 'move')
+                    elif nextmove == 1:
+                        if colloc + 1 < len(self.grid):
+                            location = self.action([rowloc, colloc], [rowloc, colloc + 1], 'move')
+                    elif nextmove == 2:
+                        if rowloc - 1 >= 0:
+                            location = self.action([rowloc, colloc], [rowloc - 1, colloc], 'move')
+                    elif nextmove == 3:
+                        if colloc - 1 >= 0:
+                            location = self.action([rowloc, colloc], [rowloc, colloc - 1], 'move')
+                else:
+                    location = self.action([rowloc, colloc], [rowloc, colloc], 'shoot')
             else:
-                pass #move in accordance of what was just sensed
+                if prob < arrow:
+                    location = self.action([rowloc, colloc], [rowloc, colloc], 'shoot')
+                elif arrow < prob and prob < arrow + safe:  #savemove
+                    location = self.action([rowloc, colloc], [prevrow, prevcol], 'move')   #moves to previous cell since that is guarenteed to be safe
+                else:   #dangerous move
+                    nextmove = random.randint(0, 3)
+                    if nextmove == 0:
+                        if rowloc + 1 < len(self.grid) and rowloc + 1 != prevrow:
+                            location = self.action([rowloc, colloc], [rowloc + 1, colloc], 'move')
+                    elif nextmove == 1:
+                        if colloc + 1 < len(self.grid) and colloc + 1 != prevcol:
+                            location = self.action([rowloc, colloc], [rowloc, colloc + 1], 'move')
+                    elif nextmove == 2:
+                        if rowloc - 1 >= 0 and rowloc - 1 != prevrow:
+                            location = self.action([rowloc, colloc], [rowloc - 1, colloc], 'move')
+                    elif nextmove == 3:
+                        if colloc - 1 >= 0 and colloc - 1 != prevcol:
+                            location = self.action([rowloc, colloc], [rowloc, colloc - 1], 'move')
+            prevrow = rowloc
+            prevcol = colloc
+            rowloc = location[0]
+            colloc = location[1]
+        return self.move
+
 
 
     def inferenceAgent(self, rowloc, colloc):
+        prevrow = rowloc
+        prevcol = colloc
         while True:
             percepts = self.sense(rowloc, colloc)
             if percepts == 'dead':
@@ -122,6 +199,15 @@ class Explorer():
             elif percepts == 'win':
                 return self.move + 1
             elif percepts == 'bump':
-                pass  # player returns to previous location NEED TO STORE PREV
+                #update KB
+                self.action([rowloc, colloc], [prevrow, prevcol], 'move')
+                self.move -= 1  # moving to wall and away from wall are counted, this should just be 1 move
+            elif percepts == 'scream':
+                InferenceSystem.updateKBshot()      #EDIT MORE
             elif len(percepts) != 0:
                 InferenceSystem.updateKB(rowloc, colloc, percepts)
+            prevrow = rowloc
+            prevcol = colloc
+            location = self.action()
+            rowloc = location[0]
+            colloc = location[1]
