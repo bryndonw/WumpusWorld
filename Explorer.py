@@ -145,21 +145,27 @@ class Explorer():
                 location = self.action([rowloc, colloc], [prevrow, prevcol], 'move')
                 self.move -= 1  #moving to wall and away from wall are counted, this should just be 1 move
             prob = random.uniform(0,1)
-            if percepts == []:
-                if prob > arrow:
-                    nextmove = random.randint(0,3)
-                    if nextmove == 0:
-                        if rowloc + 1 < len(self.grid):
-                            location = self.action([rowloc, colloc], [rowloc + 1, colloc], 'move')
-                    elif nextmove == 1:
-                        if colloc + 1 < len(self.grid):
-                            location = self.action([rowloc, colloc], [rowloc, colloc + 1], 'move')
-                    elif nextmove == 2:
-                        if rowloc - 1 >= 0:
-                            location = self.action([rowloc, colloc], [rowloc - 1, colloc], 'move')
-                    elif nextmove == 3:
-                        if colloc - 1 >= 0:
-                            location = self.action([rowloc, colloc], [rowloc, colloc - 1], 'move')
+            if percepts == []:  #no percepts means that every square around you is safe
+                if prob > arrow:    #if every square is safe safe and dangerous prob are combined
+                    notValid = True
+                    while notValid:
+                        nextmove = random.randint(0,3)
+                        if nextmove == 0:
+                            if rowloc + 1 < len(self.grid):
+                                location = self.action([rowloc, colloc], [rowloc + 1, colloc], 'move')
+                                notValid = False
+                        elif nextmove == 1:
+                            if colloc + 1 < len(self.grid):
+                                location = self.action([rowloc, colloc], [rowloc, colloc + 1], 'move')
+                                notValid = False
+                        elif nextmove == 2:
+                            if rowloc - 1 >= 0:
+                                location = self.action([rowloc, colloc], [rowloc - 1, colloc], 'move')
+                                notValid = False
+                        elif nextmove == 3:
+                            if colloc - 1 >= 0:
+                                location = self.action([rowloc, colloc], [rowloc, colloc - 1], 'move')
+                                notValid = False
                 else:
                     location = self.action([rowloc, colloc], [rowloc, colloc], 'shoot')
             else:
@@ -168,19 +174,25 @@ class Explorer():
                 elif arrow < prob and prob < arrow + safe:  #savemove
                     location = self.action([rowloc, colloc], [prevrow, prevcol], 'move')   #moves to previous cell since that is guarenteed to be safe
                 else:   #dangerous move
-                    nextmove = random.randint(0, 3)
-                    if nextmove == 0:
-                        if rowloc + 1 < len(self.grid) and rowloc + 1 != prevrow:
-                            location = self.action([rowloc, colloc], [rowloc + 1, colloc], 'move')
-                    elif nextmove == 1:
-                        if colloc + 1 < len(self.grid) and colloc + 1 != prevcol:
-                            location = self.action([rowloc, colloc], [rowloc, colloc + 1], 'move')
-                    elif nextmove == 2:
-                        if rowloc - 1 >= 0 and rowloc - 1 != prevrow:
-                            location = self.action([rowloc, colloc], [rowloc - 1, colloc], 'move')
-                    elif nextmove == 3:
-                        if colloc - 1 >= 0 and colloc - 1 != prevcol:
-                            location = self.action([rowloc, colloc], [rowloc, colloc - 1], 'move')
+                    notValid = True
+                    while notValid:
+                        nextmove = random.randint(0, 3)
+                        if nextmove == 0:
+                            if rowloc + 1 < len(self.grid) and rowloc + 1 != prevrow:
+                                location = self.action([rowloc, colloc], [rowloc + 1, colloc], 'move')
+                                notValid = False
+                        elif nextmove == 1:
+                            if colloc + 1 < len(self.grid) and colloc + 1 != prevcol:
+                                location = self.action([rowloc, colloc], [rowloc, colloc + 1], 'move')
+                                notValid = False
+                        elif nextmove == 2:
+                            if rowloc - 1 >= 0 and rowloc - 1 != prevrow:
+                                location = self.action([rowloc, colloc], [rowloc - 1, colloc], 'move')
+                                notValid = False
+                        elif nextmove == 3:
+                            if colloc - 1 >= 0 and colloc - 1 != prevcol:
+                                location = self.action([rowloc, colloc], [rowloc, colloc - 1], 'move')
+                                notValid = False
             prevrow = rowloc
             prevcol = colloc
             rowloc = location[0]

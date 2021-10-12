@@ -14,7 +14,11 @@ class InferenceSystem():
         return action
 
     def unify(self, x, y , z):
+        #given x: a rule and
+        #y: the location
+        #returns rule including location
         return z
 
     def resolution(self, KB, sentence):
+        # combines rules into FACTS
         return bool
