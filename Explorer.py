@@ -216,7 +216,7 @@ class Explorer():
                 self.move -= 1  # moving to wall and away from wall are counted, this should just be 1 move
             elif percepts == 'scream':
                 InferenceSystem.updateKBshot()      #EDIT MORE
-            elif len(percepts) != 0:
+            else:
                 InferenceSystem.updateKB(rowloc, colloc, percepts)
             prevrow = rowloc
             prevcol = colloc
