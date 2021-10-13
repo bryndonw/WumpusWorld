@@ -20,6 +20,7 @@ class Explorer():
         self.move += 1
 
         if act == 'shoot':
+            self.shoot = True
             return curr_pos
         elif act == 'turn_left':
             if self.facing == 1:
