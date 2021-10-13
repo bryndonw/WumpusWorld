@@ -1,5 +1,4 @@
 import re
-# need to include way to mark visited squares
 class InferenceSystem():
     def __init__(self):
         self.rule = {'~s': '~s(row,col) & {~w(row-1,col) & ~w(row+1,col) & ~w(row,col-1) & ~w(row,col+1)}',
@@ -8,32 +7,59 @@ class InferenceSystem():
                      'b': 'b(row,col) & {p(row-1, col) | p(row+1, col) | p(row, col-1) | p(row, col+1)}',
                      'bump': 'o(row,col)',
                      '~bump': '~o(row,col)'}
+
         self.KB = []
         pass
 
     def updateKB(self, rowloc, colloc, percepts):
         z = []
-        self.unify(self, 's(row, col)', 's(' + str(rowloc) + ', ' + str(colloc) + ')', z)
-        """
         if 's' in percepts:
-        
-           replace = self.unify('s(row, col)', 's('+rowloc+', ' + colloc+')', z)
-           #self.rule['s(row, col)'] #iterate over replace, look for key in rule and replace key w val
-           #self.resolution(self.KB, #returned value)
+            replace = self.unify('s(row, col)', 's(' + str(rowloc) + ', ' + str(colloc) + ')', z)
+            newreplace = replace.copy()
+            for key, val in replace.items():
+                newreplace[str(key) + '-1'] = int(val) - 1
+                newreplace[str(key) + '+1'] = int(val) + 1
+            check = self.rule['s(row,col)']
+            for key, val in newreplace.items().__reversed__():
+                check = check.replace(key, str(val))
+            print(check)
         else:
-            self.unify(self.rule['~s'], [rowloc, colloc], z)
+            replace = self.unify('~s(row, col)', '~s(' + str(rowloc) + ', ' + str(colloc) + ')', z)
+            newreplace = replace.copy()
+            for key, val in replace.items():
+                newreplace[str(key) + '-1'] = int(val) - 1
+                newreplace[str(key) + '+1'] = int(val) + 1
+            check = self.rule['~s(row,col)']
+            for key, val in newreplace.items().__reversed__():
+                check = check.replace(key, str(val))
+            print(check)
         if 'b' in percepts:
-            self.unify(self.rule['b'], [rowloc, colloc], z)
+            replace = self.unify('b(row, col)', 'b(' + str(rowloc) + ', ' + str(colloc) + ')', z)
+            newreplace = replace.copy()
+            for key, val in replace.items():
+                newreplace[str(key) + '-1'] = int(val) - 1
+                newreplace[str(key) + '+1'] = int(val) + 1
+            check = self.rule['b(row,col)']
+            for key, val in newreplace.items().__reversed__():
+                check = check.replace(key, str(val))
+            print(check)
         else:
-            self.unify(self.rule['~b'], [rowloc, colloc], z)
-        if percepts == 'bump':
-            self.unify(self.rule['bump'], [rowloc, colloc], z)
-"""
+            replace = self.unify('~b(row, col)', '~b(' + str(rowloc) + ', ' + str(colloc) + ')', z)
+            newreplace = replace.copy()
+            for key, val in replace.items():
+                newreplace[str(key) + '-1'] = int(val) - 1
+                newreplace[str(key) + '+1'] = int(val) + 1
+            check = self.rule['~b(row,col)']
+            for key, val in newreplace.items().__reversed__():
+                check = check.replace(key, str(val))
+            print(check)
+        #if percepts == 'bump':
+         #   self.unify(self.rule['bump'], [rowloc, colloc], z)
 
     def unify(self, x, y, z):
-       print(x)
-       print(y)
-       z = {x[2]: y[2], x[5]: y[5]}
+       x = re.split(r'[(,)]\s*', x)
+       y = re.split(r'[(,)]\s*', y)
+       z = {x[1]: y[1], x[2]: y[2]}
        # given x: a rule and
        # y: the location
        # returns rule including location
