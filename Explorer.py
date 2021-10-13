@@ -219,7 +219,8 @@ class Explorer():
                 InferenceSystem.updateKBshot()      #EDIT MORE
             else:
                 if self.grid[rowloc][colloc] == 'f':
-                    InferenceSystem.updateKB(InferenceSystem, rowloc, colloc, percepts)
+                    infsys = InferenceSystem()
+                    infsys.updateKB(rowloc, colloc, percepts)
                     self.grid[rowloc][colloc] == 'v'
             prevrow = rowloc
             prevcol = colloc
