@@ -9,6 +9,7 @@ class Explorer():
         self.grid = grid
 
         # facing is the current direction the agent is facing. 1 is up, 2 is right, 3 is down, 4 is left
+        self.points = 0
         self.facing = 1
         self.move = 0
         self.shoot = False
@@ -20,15 +21,18 @@ class Explorer():
         self.move += 1
 
         if act == 'shoot':
+            self.points -= 10
             self.shoot = True
             return curr_pos
         elif act == 'turn_left':
+            self.point -= 1
             if self.facing == 1:
                 self.facing = 4
             else:
                 self.facing -= 1
             return curr_pos
         elif act == 'turn_right':
+            self.point -= 1
             if self.facing == 4:
                 self.facing = 1
             else:

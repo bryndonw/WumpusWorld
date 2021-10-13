@@ -1,11 +1,13 @@
 import re
 class InferenceSystem():
     def __init__(self):
-        self.rule = {'~s': '~s(row,col) | {w(row-1, col) | w(row+1, col) | w(row, col-1) | w(row, col+1)}',
-                     '~b': '~b(row,col) | {p(row-1, col) | p(row+1, col) | p(row, col-1) | p(row, col+1)}',
-                     's(row,col)': 's(row,col) | {~w(row-1,col) & ~w(row+1,col) & ~w(row,col-1) & ~w(row,col+1)}',
-                     'b': 'b(row,col) | {~p(row-1,col) & ~p(row+1,col) & ~p(row,col-1) & ~p(row,col+1)}',
-                     'bump': 'o(row,col)'}
+        self.rule = {'~s': '~s(row,col) & {~w(row-1,col) & ~w(row+1,col) & ~w(row,col-1) & ~w(row,col+1)}',
+                     '~b': '~b(row,col) & {~p(row-1,col) & ~p(row+1,col) & ~p(row,col-1) & ~p(row,col+1)}',
+                     's': 's(row,col) & {w(row-1, col) | w(row+1, col) | w(row, col-1) | w(row, col+1)}',
+                     'b': 'b(row,col) & {p(row-1, col) | p(row+1, col) | p(row, col-1) | p(row, col+1)}',
+                     'bump': 'o(row,col)',
+                     '~bump': '~o(row,col)'}
+
         self.KB = []
         pass
 
@@ -71,7 +73,8 @@ class InferenceSystem():
     def bestAction(self, rowloc, colloc):
         return action
 
-
+    def s(self, row, col):
+        return [(row,col),(row-1,col),(row+1,col),(row,col-1),(row,col+1)]
 
     def resolution(self, KB, sentence):
         # combines rules into FACTS
