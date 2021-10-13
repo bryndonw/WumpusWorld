@@ -1,12 +1,10 @@
 
 class InferenceSystem():
     def __init__(self):
-        self.rule = {'~s': '~s(row,col) | (w(row-1, col) | w(row+1, col) | w(row, col-1) | w(row, col+1))',
-                     '~b': '~b(row,col) | (p(row-1, col) | p(row+1, col) | p(row, col-1) | p(row, col+1))',
-                     's': '(s(row,col) | ~w(row-1,col)) & (s(row,col) | ~w(row+1,col)) & (s(row,col) | ~w(row,col-1))'
-                          '& (s(row,col) | ~w(row,col+1))',
-                     'b': '(b(row,col) | ~p(row-1,col)) & (b(row,col) | ~p(row+1,col)) & (b(row,col) | ~p(row,col-1))'
-                           '& (b(row,col) | ~p(row,col+1))',
+        self.rule = {'~s': '~s(row,col) | {w(row-1, col) | w(row+1, col) | w(row, col-1) | w(row, col+1)}',
+                     '~b': '~b(row,col) | {p(row-1, col) | p(row+1, col) | p(row, col-1) | p(row, col+1)}',
+                     's': 's(row,col) | {~w(row-1,col) & ~w(row+1,col) & ~w(row,col-1) & ~w(row,col+1)}',
+                     'b': 'b(row,col) | {~p(row-1,col) & ~p(row+1,col) & ~p(row,col-1) & ~p(row,col+1)}',
                      'bump': 'o(row,col)'}
         self.KB = []
         pass
