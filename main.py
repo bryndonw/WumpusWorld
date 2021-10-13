@@ -8,7 +8,7 @@ def main():
     start = WumpusWorldGen.startloc(WumpusWorldGen, puzzle)
     print(start)
     one = Explorer(puzzle)
-    test = one.reactiveAgent(start[0], start[1])
+    test = one.inferenceAgent(start[0], start[1])
     print(test)
 
 

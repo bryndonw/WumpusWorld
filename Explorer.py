@@ -218,7 +218,9 @@ class Explorer():
             elif percepts == 'scream':
                 InferenceSystem.updateKBshot()      #EDIT MORE
             else:
-                InferenceSystem.updateKB(rowloc, colloc, percepts)
+                if self.grid[rowloc][colloc] == 'f':
+                    InferenceSystem.updateKB(InferenceSystem, rowloc, colloc, percepts)
+                    self.grid[rowloc][colloc] == 'v'
             prevrow = rowloc
             prevcol = colloc
             location = self.action()
