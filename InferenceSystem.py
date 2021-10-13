@@ -12,26 +12,18 @@ class InferenceSystem():
         pass
 
     def updateKB(self, rowloc, colloc, percepts):
-        """
+        z = []
         if 's' in percepts:
-            x = ~s(row,col)
-            y = ~s(rowlow,colloc)
-            s = {row: rowloc,
-                 col: collow}
-            x = w(row-1, col)
-            y = 1
-
-           #self.unify(self.rule['s'], rowloc, )
+           self.unify(self.rule['s'], s(rowloc, colloc), z)
         else:
-            #self.unify(self.rule['~s'])
+            self.unify(self.rule['~s'], [rowloc, colloc], z)
         if 'b' in percepts:
-            #self.unify(self.rule['b'])
+            self.unify(self.rule['b'], [rowloc, colloc], z)
         else:
-            #self.unify(self.rule['~b'])
+            self.unify(self.rule['~b'], [rowloc, colloc], z)
         if percepts == 'bump':
-            self.unify(self.rule['bump'])
-            """
-        pass
+            self.unify(self.rule['bump'], [rowloc, colloc], z)
+
 
     def updateKBshot(self):
         pass
