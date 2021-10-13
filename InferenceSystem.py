@@ -20,7 +20,7 @@ class InferenceSystem():
             check = self.rule['s(row,col)']
             for key, val in newreplace.items().__reversed__():
                 check = check.replace(key, str(val))
-            print(check)
+            self.resolution(self.KB, check)
         else:
             replace = self.unify('~s(row, col)', '~s(' + str(rowloc) + ', ' + str(colloc) + ')', z)
             newreplace = replace.copy()
