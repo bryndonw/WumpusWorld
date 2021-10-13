@@ -11,33 +11,49 @@ class InferenceSystem():
 
     def updateKB(self, rowloc, colloc, percepts):
         z = []
-        replace = self.unify('s(row, col)', 's(' + str(rowloc) + ', ' + str(colloc) + ')', z)
-        newreplace = replace.copy()
-        for key, val in replace.items():
-            newreplace[str(key) + '-1'] = int(val) - 1
-            newreplace[str(key) + '+1'] = int(val) + 1
-        check = self.rule['s(row,col)']
-        for key, val in newreplace.items().__reversed__():
-            check = check.replace(key, str(val))
-        print(check)
-        '''
         if 's' in percepts:
-            replace = self.unify('s(row, col)', 's('+rowloc+', ' + colloc+')', z)
-            check = self.rule['s(row, col)']
+            replace = self.unify('s(row, col)', 's(' + str(rowloc) + ', ' + str(colloc) + ')', z)
+            newreplace = replace.copy()
             for key, val in replace.items():
-                check.replace(key, val)
-                print(check)
-           #self.rule['s(row, col)'] #iterate over replace, look for key in rule and replace key w val
-           #self.resolution(self.KB, #returned value)
+                newreplace[str(key) + '-1'] = int(val) - 1
+                newreplace[str(key) + '+1'] = int(val) + 1
+            check = self.rule['s(row,col)']
+            for key, val in newreplace.items().__reversed__():
+                check = check.replace(key, str(val))
+            print(check)
         else:
-            self.unify(self.rule['~s'], [rowloc, colloc], z)
+            replace = self.unify('~s(row, col)', '~s(' + str(rowloc) + ', ' + str(colloc) + ')', z)
+            newreplace = replace.copy()
+            for key, val in replace.items():
+                newreplace[str(key) + '-1'] = int(val) - 1
+                newreplace[str(key) + '+1'] = int(val) + 1
+            check = self.rule['~s(row,col)']
+            for key, val in newreplace.items().__reversed__():
+                check = check.replace(key, str(val))
+            print(check)
         if 'b' in percepts:
-            self.unify(self.rule['b'], [rowloc, colloc], z)
+            replace = self.unify('b(row, col)', 'b(' + str(rowloc) + ', ' + str(colloc) + ')', z)
+            newreplace = replace.copy()
+            for key, val in replace.items():
+                newreplace[str(key) + '-1'] = int(val) - 1
+                newreplace[str(key) + '+1'] = int(val) + 1
+            check = self.rule['b(row,col)']
+            for key, val in newreplace.items().__reversed__():
+                check = check.replace(key, str(val))
+            print(check)
         else:
-            self.unify(self.rule['~b'], [rowloc, colloc], z)
-        if percepts == 'bump':
-            self.unify(self.rule['bump'], [rowloc, colloc], z)
-        '''
+            replace = self.unify('~b(row, col)', '~b(' + str(rowloc) + ', ' + str(colloc) + ')', z)
+            newreplace = replace.copy()
+            for key, val in replace.items():
+                newreplace[str(key) + '-1'] = int(val) - 1
+                newreplace[str(key) + '+1'] = int(val) + 1
+            check = self.rule['~b(row,col)']
+            for key, val in newreplace.items().__reversed__():
+                check = check.replace(key, str(val))
+            print(check)
+        #if percepts == 'bump':
+         #   self.unify(self.rule['bump'], [rowloc, colloc], z)
+
     def unify(self, x, y, z):
        x = re.split(r'[(,)]\s*', x)
        y = re.split(r'[(,)]\s*', y)
