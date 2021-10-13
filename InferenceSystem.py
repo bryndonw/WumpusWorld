@@ -2,11 +2,12 @@ import re
 # need to include way to mark visited squares
 class InferenceSystem():
     def __init__(self):
-        self.rule = {'~s': '~s(row,col) | {w(row-1, col) | w(row+1, col) | w(row, col-1) | w(row, col+1)}',
-                     '~b': '~b(row,col) | {p(row-1, col) | p(row+1, col) | p(row, col-1) | p(row, col+1)}',
-                     's': 's(row,col) | {~w(row-1,col) & ~w(row+1,col) & ~w(row,col-1) & ~w(row,col+1)}',
-                     'b': 'b(row,col) | {~p(row-1,col) & ~p(row+1,col) & ~p(row,col-1) & ~p(row,col+1)}',
-                     'bump': 'o(row,col)'}
+        self.rule = {'~s': '~s(row,col) & {~w(row-1,col) & ~w(row+1,col) & ~w(row,col-1) & ~w(row,col+1)}',
+                     '~b': '~b(row,col) & {~p(row-1,col) & ~p(row+1,col) & ~p(row,col-1) & ~p(row,col+1)}',
+                     's': 's(row,col) & {w(row-1, col) | w(row+1, col) | w(row, col-1) | w(row, col+1)}',
+                     'b': 'b(row,col) & {p(row-1, col) | p(row+1, col) | p(row, col-1) | p(row, col+1)}',
+                     'bump': 'o(row,col)',
+                     '~bump': '~o(row,col)'}
         self.KB = []
         pass
 
@@ -15,6 +16,7 @@ class InferenceSystem():
         self.unify(self, 's(row, col)', 's(' + str(rowloc) + ', ' + str(colloc) + ')', z)
         """
         if 's' in percepts:
+        
            replace = self.unify('s(row, col)', 's('+rowloc+', ' + colloc+')', z)
            #self.rule['s(row, col)'] #iterate over replace, look for key in rule and replace key w val
            #self.resolution(self.KB, #returned value)
@@ -45,7 +47,8 @@ class InferenceSystem():
     def bestAction(self, rowloc, colloc):
         return action
 
-
+    def s(self, row, col):
+        return [(row,col),(row-1,col),(row+1,col),(row,col-1),(row,col+1)]
 
     def resolution(self, KB, sentence):
         # combines rules into FACTS
