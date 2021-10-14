@@ -2,7 +2,8 @@
 import random
 import re
 class InferenceSystem():
-    def __init__(self):
+    def __init__(self, gridsize):
+        self.gridsize = gridsize
         self.rule = {'~s(row,col)': '~s(row,col) & ~w(row-1,col) & ~w(row+1,col) & ~w(row,col-1) & ~w(row,col+1)',
                      '~b(row,col)': '~b(row,col) & ~p(row-1,col) & ~p(row+1,col) & ~p(row,col-1) & ~p(row,col+1)',
                      's(row,col)': 's(row,col) & {w(row-1, col) | w(row+1, col) | w(row, col-1) | w(row, col+1)}',
@@ -14,7 +15,7 @@ class InferenceSystem():
 
     def updateKB(self, rowloc, colloc, percepts):
         z = []
-        #self.KB.append('v(' + str(rowloc) + ',' + str(colloc) + ')')
+        self.KB.append('v(' + str(rowloc) + ',' + str(colloc) + ')')
         if 's' in percepts:
             replace = self.unify('s(row,col)', 's(' + str(rowloc) + ',' + str(colloc) + ')', z)
             newreplace = replace.copy()
@@ -28,7 +29,6 @@ class InferenceSystem():
             check = check.split('&')
             for fact in check:
                 self.KB.append(fact)
-
         else:
             replace = self.unify('~s(row,col)', '~s(' + str(rowloc) + ',' + str(colloc) + ')', z)
             newreplace = replace.copy()
@@ -90,7 +90,6 @@ class InferenceSystem():
        # given x: a rule and
        # y: the location
        # returns rule including location
-       print(z)
        return z
 
 
@@ -111,19 +110,23 @@ class InferenceSystem():
         shoot = [] #is this really a list ?
         unsafe = []
         for act in actions:
-        #true means ~ ?? I thinkgs
-            wumpus = self.resolution(self.KB, '~w('+ str(act[0]) + ',' + str(act[1]) + ')')
-            pit = self.resolution(self.KB, '~p(' + str(act[0]) + ',' + str(act[1]) + ')')
-            obstacle = self.resolution(self.KB, '~o(' + str(act[0]) + ',' + str(act[1]) + ')')
-            visited = self.resolution(self.KB, '~v(' + str(act[0]) + ',' + str(act[1]) + ')')
-            if not visited and not wumpus and not pit and not obstacle:
-                safeUnvisited.append(act)
-            elif not wumpus and not pit and not obstacle and visited:
-                safeVisited.append(act)
-            elif wumpus and not visited and not obstacle and not pit:
-                shoot.append(act)
-            elif wumpus or pit:
-                unsafe.append(act)
+            if act[0] >= 0 and act[0] < self.gridsize and act[1] >= 0 and act[1] < self.gridsize:
+                wumpus = self.resolution(self.KB, '~w('+ str(act[0]) + ',' + str(act[1]) + ')')
+                pit = self.resolution(self.KB, '~p(' + str(act[0]) + ',' + str(act[1]) + ')')
+                obstacle = self.resolution(self.KB, '~o(' + str(act[0]) + ',' + str(act[1]) + ')')
+                visited = self.resolution(self.KB, '~v(' + str(act[0]) + ',' + str(act[1]) + ')')
+                print('wumpus', wumpus)
+                print('pit', pit)
+                print('obstacle', obstacle)
+                print('visited', visited)
+                if not visited and not wumpus and not pit and not obstacle:
+                    safeUnvisited.append(act)
+                elif not wumpus and not pit and not obstacle and visited:
+                    safeVisited.append(act)
+                elif wumpus and not visited and not obstacle and not pit:
+                    shoot.append(act)
+                elif wumpus or pit:
+                    unsafe.append(act)
         if len(safeUnvisited) != 0:
             prob = random.randint(0, len(safeUnvisited) - 1)
             return safeUnvisited[prob], 'move'

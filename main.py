@@ -15,11 +15,11 @@ def main():
     iss.bestAction(0,1)
     '''
     puzzle, arrows = WumpusWorldGen.generateGrid(WumpusWorldGen, 5, .1, .1, .1)
-    #start = WumpusWorldGen.startloc(WumpusWorldGen, puzzle)
-    #print(start)
-    #one = Explorer(puzzle, arrows)
-    #test = one.inferenceAgent(start[0], start[1])
-    #print(test)
+    start = WumpusWorldGen.startloc(WumpusWorldGen, puzzle)
+    print(start)
+    one = Explorer(puzzle, arrows)
+    test = one.inferenceAgent(start[0], start[1])
+    print(test)
 
 
 

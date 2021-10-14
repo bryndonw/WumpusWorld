@@ -151,7 +151,6 @@ class Explorer():
             elif percepts == 'win':
                 print('won')
                 # picking up the gold costs 1 point and is 1 move
-                self.move += 1
                 self.points -= 1
                 # we have found the gold so we get 100 points
                 self.points += 100
@@ -223,17 +222,21 @@ class Explorer():
     def inferenceAgent(self, rowloc, colloc):
         prevrow = rowloc
         prevcol = colloc
-        infsys = InferenceSystem()
+        infsys = InferenceSystem(len(self.grid))
         while True:
             percepts = self.sense(rowloc, colloc)
             if percepts == 'dead':
+                print('dead')
                 return self.move
             elif percepts == 'win':
+                print('won')
                 return self.move + 1
             elif percepts == 'bump':
                 #update KB
                 infsys.updateKB(rowloc, colloc, percepts)
-                self.action([rowloc, colloc], [prevrow, prevcol], 'move')
+                newpos = self.action([rowloc, colloc], [prevrow, prevcol], 'move')
+                rowloc = newpos[0]
+                colloc = newpos[1]
                 self.move -= 3  # moving to wall and turning twice and moving away from wall are counted, this should just be 1 move
                 self.points += 3    #same for points
             elif percepts == 'scream':
@@ -241,9 +244,12 @@ class Explorer():
             else:
                 if self.grid[rowloc][colloc] == 'f':
                     infsys.updateKB(rowloc, colloc, percepts)
-                    self.grid[rowloc][colloc] == 'v'
-            prevrow = rowloc
-            prevcol = colloc
-            location = self.action()
-            rowloc = location[0]
-            colloc = location[1]
+                    self.grid[rowloc][colloc] = 'v'
+                location, act = infsys.bestAction(rowloc, colloc)
+                print(location)
+                prevrow = rowloc
+                prevcol = colloc
+                newpos = self.action([rowloc, colloc], location, act)
+                rowloc = newpos[0]
+                colloc = newpos[1]
+
