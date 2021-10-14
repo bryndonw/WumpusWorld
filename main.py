@@ -7,8 +7,11 @@ from InferenceSystem import InferenceSystem
 
 def main():
     iss = InferenceSystem()
-    iss.updateKB(1, 1, ['s'])
-    iss.bestAction(3,3)
+    iss.updateKB(1, 0, ['s'])
+    iss.updateKB(0, 1, ['s'])
+    iss.updateKB(1, 2, ['s'])
+    iss.updateKB(2, 1, ['s'])
+    iss.bestAction(0,1)
     '''
     puzzle = WumpusWorldGen.generateGrid(WumpusWorldGen, 5, .1, .1, .1)
     start = WumpusWorldGen.startloc(WumpusWorldGen, puzzle)

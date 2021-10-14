@@ -90,11 +90,12 @@ class InferenceSystem():
         #for act in actions:
         #true means ~ ?? I thinkgs
         act = actions[0]
+        print(act)
         wumpus = self.resolution(self.KB, '~w('+ str(act[0]) + ',' + str(act[1]) + ')')
         print(wumpus)
-        pit = self.resolution(self.KB, '~p(' + str(act[0]) + ',' + str(act[1]) + ')')
-        obstacle = self.resolution(self.KB, '~o(' + str(act[0]) + ',' + str(act[1]) + ')')
-        visited = self.resolution(self.KB, '~v(' + str(act[0]) + ',' + str(act[1]) + ')')
+        #pit = self.resolution(self.KB, '~p(' + str(act[0]) + ',' + str(act[1]) + ')')
+        #obstacle = self.resolution(self.KB, '~o(' + str(act[0]) + ',' + str(act[1]) + ')')
+        #visited = self.resolution(self.KB, '~v(' + str(act[0]) + ',' + str(act[1]) + ')')
         #do logic on bools to determine best move
 
         #check all 4 squares around
@@ -108,6 +109,7 @@ class InferenceSystem():
     def resolution(self, KB, sentence):
         currKB = KB.copy()
         currKB.append(sentence)
+        print(currKB)
         new = []
         while True:
             for KBi in currKB:
@@ -115,13 +117,29 @@ class InferenceSystem():
                     if KBi != KBj:
                         resolvents = self.resolve(KBi, KBj)
                         if len(resolvents) == 0: return True
-                        new = set(new.append(resolvents))
-            if new.issubset(currKB): return False
-            currKB = set(currKB.append(new))
+                        print(resolvents)
+                        for resolve in resolvents:
+                            new.append(resolve)
+                        print(new)
+                        new = list(set(new))
+            if set(new).issubset(currKB): return False
+            print(new)
+            for n in new:
+                currKB.append(n)
+            print(currKB)
+            currKB = list(set(currKB))
 
     def resolve(self, clause1, clause2):
         clauses = []
         #drop {}
+        print('THIS', clause1)
+        print(clause2)
+        clause1.replace('{', "")
+        clause1.replace('}', "")
+        clause1.replace(' ', "")
+        clause2.replace('{', "")
+        clause2.replace('}', "")
+        clause2.replace(' ', "")
         if '|' in clause1:
             clause1dis = clause1.split('|')
         else:
@@ -130,11 +148,25 @@ class InferenceSystem():
             clause2dis = clause2.split('|')
         else:
             clause2dis = [clause2]
+        print(clause1dis)
+       # print(clause2dis)
         for d1 in clause1dis:
             for d2 in clause2dis:
                 if d1 == '~' + d2 or '~' + d1 == d2:
-                    list(set(clause2.remove(d1) + clause1.remove(d2)))
-                    clauses.append(list(set(clause2.remove(d1) + clause1.remove(d2))))
+                    print('here')
+                    #print(clause2dis, d1)
+                    #print(clause1dis, d2)
+                    if clause2dis.copy().remove(d2) != None and clause1dis.copy().remove(d1) == None:
+                        for item in list(set(clause1dis.copy().remove(d1))):
+                            clauses.append(item)
+                    if clause2dis.copy().remove(d2) == None and clause1dis.copy().remove(d1) != None:
+                        for item in list(set(clause1dis.copy().remove(d1))):
+                        clauses.append(item)
+                    if clause2dis.copy().remove(d2) != None and clause1dis.copy().remove(d1) != None:
+                        for item in list(set(clause1dis.copy().remove(d1) + clause2dis.copy().remove(d2))):
+                            clauses.append(item)
+                else:
+
         return clauses
 
 
