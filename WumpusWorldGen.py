@@ -6,6 +6,7 @@ class WumpusWorldGen():
 
     def generateGrid(self, size, ppit, pwumpus, pobstacle):
         grid = []
+        arrows = 0
         for i in range(size):
             row = []
             for j in range(size):
@@ -13,6 +14,7 @@ class WumpusWorldGen():
                 if num < ppit:
                     row.append('p')
                 elif ppit < num < ppit + pwumpus:
+                    arrows += 1
                     row.append('w')
                 elif ppit + pwumpus < num < ppit + pwumpus + pobstacle:
                     row.append('o')
@@ -32,7 +34,7 @@ class WumpusWorldGen():
         for i in range(size):
             print(grid[i])
 
-        return grid
+        return grid, arrows
 
     def startloc(self, grid):
         loc = []

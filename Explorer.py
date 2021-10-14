@@ -5,9 +5,9 @@ from InferenceSystem import InferenceSystem
 import numpy as np
 
 class Explorer():
-    def __init__(self, grid):
+    def __init__(self, grid, arrows):
         self.grid = grid
-
+        self.arrows = arrows
         # facing is the current direction the agent is facing. 1 is up, 2 is right, 3 is down, 4 is left
         self.points = 0
         self.facing = 1
@@ -172,10 +172,12 @@ class Explorer():
                                 location = self.action([rowloc, colloc], [rowloc, colloc - 1], 'move')
                                 notValid = False
                 else:
-                    location = self.action([rowloc, colloc], [rowloc, colloc], 'shoot')
+                    if self.arrows > 0:
+                        location = self.action([rowloc, colloc], [rowloc, colloc], 'shoot')
             else:
                 if prob < arrow:
-                    location = self.action([rowloc, colloc], [rowloc, colloc], 'shoot')
+                    if self.arrows > 0:
+                        location = self.action([rowloc, colloc], [rowloc, colloc], 'shoot')
                 elif arrow < prob and prob < arrow + safe:  #savemove
                     location = self.action([rowloc, colloc], [prevrow, prevcol], 'move')   #moves to previous cell since that is guarenteed to be safe
                 else:   #dangerous move
@@ -209,6 +211,7 @@ class Explorer():
     def inferenceAgent(self, rowloc, colloc):
         prevrow = rowloc
         prevcol = colloc
+        infsys = InferenceSystem()
         while True:
             percepts = self.sense(rowloc, colloc)
             if percepts == 'dead':
@@ -217,13 +220,14 @@ class Explorer():
                 return self.move + 1
             elif percepts == 'bump':
                 #update KB
+                infsys.updateKB(rowloc, colloc, percepts)
                 self.action([rowloc, colloc], [prevrow, prevcol], 'move')
-                self.move -= 1  # moving to wall and away from wall are counted, this should just be 1 move
+                self.move -= 3  # moving to wall and turning twice and moving away from wall are counted, this should just be 1 move
+                self.points += 3    #same for points
             elif percepts == 'scream':
-                InferenceSystem.updateKBshot()      #EDIT MORE
+                InferenceSystem.updateKBshot(rowloc, colloc, self.facing)
             else:
                 if self.grid[rowloc][colloc] == 'f':
-                    infsys = InferenceSystem()
                     infsys.updateKB(rowloc, colloc, percepts)
                     self.grid[rowloc][colloc] == 'v'
             prevrow = rowloc
