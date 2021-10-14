@@ -15,72 +15,75 @@ class Explorer():
         self.shoot = False
 
     def action(self, curr_pos, next_pos, act):
-        # act is either turn_left, turn_right, shoot, or move
+        # act is either shoot, or move (for every shoot or move, action will turn if needed).
+        #   This is indicated by the next_pos. If we are shooting, we will face that direction and shoot, but not move
+        #   If we are moving, we will face that direction AND move
         # curr_pos and next_pos are structured (row, column)
         # 0,0 is top left of board
+
+        # every time we call action, we are either moving to a new square or we are shooting so we increment move
         self.move += 1
 
+        # moving down (row is bigger on next position)
+
+        if next_pos[0] > curr_pos[0]:
+            if self.facing != 3:
+                # since the agent isn't facing the correct way, we must add 1 to our moves and subtract 1 from points
+                self.move += 1
+                self.points -= 1
+                # if agent is facing opposite direction, we have to make an additional move to face correct way
+                if self.facing == 1:
+                    self.move += 1
+                    self.points -= 1
+                self.facing = 3
+
+        # moving left (col is smaller on next position)
+        elif next_pos[1] < curr_pos[1]:
+            if self.facing != 4:
+                # since the agent isn't facing the correct way, we must add 1 to our moves
+                self.move += 1
+                self.points -= 1
+                # if agent is facing opposite direction, we have to make an additional move to face correct way
+                if self.facing == 2:
+                    self.move += 1
+                    self.points -= 1
+                self.facing = 4
+
+        # moving right (col is bigger on next position)
+        elif next_pos[1] > curr_pos[1]:
+
+            if self.facing != 2:
+                # since the agent isn't facing the correct way, we must add 1 to our moves
+                self.move += 1
+                self.points -= 1
+                # if agent is facing opposite direction, we have to make an additional move to face correct way
+                if self.facing == 4:
+                    self.move += 1
+                    self.points -= 1
+                self.facing = 2
+
+        # moving up (row is smaller on next position)
+        elif next_pos[0] < curr_pos[0]:
+            if self.facing != 1:
+                # since the agent isn't facing the correct way, we must add 1 to our moves
+                self.move += 1
+                self.points -= 1
+                # if agent is facing opposite direction, we have to make an additional move to face correct way
+                if self.facing == 3:
+                    self.move += 1
+                    self.points -= 1
+                self.facing = 1
+
         if act == 'shoot':
+            # shooting costs 10 points
             self.points -= 10
             self.shoot = True
             return curr_pos
-        elif act == 'turn_left':
-            self.point -= 1
-            if self.facing == 1:
-                self.facing = 4
-            else:
-                self.facing -= 1
-            return curr_pos
-        elif act == 'turn_right':
-            self.point -= 1
-            if self.facing == 4:
-                self.facing = 1
-            else:
-                self.facing += 1
-            return curr_pos
-        else:
-            # moving down (row is bigger on next position)
-            if next_pos[0] > curr_pos[0]:
-                if self.facing != 3:
-                    # since the agent isn't facing the correct way, we must add 1 to our count
-                    self.move += 1
-                    # if agent is facing opposite direction, we have to make an additional move to face correct way
-                    if self.facing == 1:
-                        self.move += 1
-                    self.facing = 3
 
-            # moving left (col is smaller on next position)
-            elif next_pos[1] < curr_pos[1]:
-                if self.facing != 4:
-                    # since the agent isn't facing the correct way, we must add 1 to our count
-                    self.move += 1
-                    # if agent is facing opposite direction, we have to make an additional move to face correct way
-                    if self.facing == 2:
-                        self.move += 1
-                    self.facing = 4
-
-            # moving right (col is bigger on next position)
-            elif next_pos[1] > curr_pos[1]:
-
-                if self.facing != 2:
-                    # since the agent isn't facing the correct way, we must add 1 to our count
-                    self.move += 1
-                    # if agent is facing opposite direction, we have to make an additional move to face correct way
-                    if self.facing == 4:
-                        self.move += 1
-                    self.facing = 2
-
-            # moving up (row is smaller on next position)
-            elif next_pos[0] < curr_pos[0]:
-                if self.facing != 1:
-                    # since the agent isn't facing the correct way, we must add 1 to our count
-                    self.move += 1
-                    # if agent is facing opposite direction, we have to make an additional move to face correct way
-                    if self.facing == 3:
-                        self.move += 1
-                    self.facing = 1
-            # we return current position
-            return next_pos
+        # moving forward costs 1 point
+        self.points -= 1
+        # we return current position
+        return next_pos
 
     def sense(self, rowloc, colloc):
         senses = []
@@ -142,9 +145,17 @@ class Explorer():
             percepts = self.sense(rowloc, colloc)
             if percepts == 'dead':
                 print("dead")
+                self.points -= 1000
+                print('Points: ' + str(self.points))
                 return self.move
             elif percepts == 'win':
                 print('won')
+                # picking up the gold costs 1 point and is 1 move
+                self.move += 1
+                self.points -= 1
+                # we have found the gold so we get 100 points
+                self.points += 100
+                print('Points: ' + str(self.points))
                 return self.move + 1
             elif percepts == 'bump':
                 location = self.action([rowloc, colloc], [prevrow, prevcol], 'move')
@@ -204,6 +215,7 @@ class Explorer():
             prevcol = colloc
             rowloc = location[0]
             colloc = location[1]
+
         return self.move
 
 
