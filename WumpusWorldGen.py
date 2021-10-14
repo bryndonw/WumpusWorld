@@ -28,9 +28,6 @@ class WumpusWorldGen():
             if grid[row][col] == 'f':
                 grid[row][col] = 'g'
                 done = True
-            elif grid[row][col] == 'w':
-                grid[row][col] = 'wg'
-                done = True
 
         for i in range(size):
             print(grid[i])
