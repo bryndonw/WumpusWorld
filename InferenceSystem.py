@@ -106,7 +106,11 @@ class InferenceSystem():
         elif facing == 4:
             self.KB.append('w(' + str(rowloc) + ',' + str(colloc  - 1) + ')')
 
-    def bestAction(self, rowloc, colloc):
+    def bestAction(self, rowloc, colloc, moves):
+
+        if moves == ((self.gridsize * 10)/5):
+            self.risk += .1
+
         actions = [[rowloc + 1, colloc], [rowloc - 1, colloc], [rowloc, colloc + 1], [rowloc, colloc - 1]]
         safeUnvisited = []
         safeVisited = []
@@ -130,18 +134,23 @@ class InferenceSystem():
                     unsafe.append(act)
                 elif wumpus and not visited and not obstacle and not pit:
                     shoot.append(act)
+        prob_move = random.uniform(0,1)
+
         if len(safeUnvisited) != 0:
             prob = random.randint(0, len(safeUnvisited) - 1)
             return safeUnvisited[prob], 'move'
-        elif len(safeVisited) != 0:
+        elif len(safeVisited) != 0 and prob_move >= self.risk:
             prob = random.randint(0, len(safeVisited) - 1)
             return safeVisited[prob], 'move'
-        elif len(unsafe) != 0:
+        elif len(unsafe) != 0 and prob_move < self.risk:
             prob = random.randint(0, len(unsafe) - 1)
             return unsafe[prob], 'move'
         elif len(shoot) != 0:
             prob = random.randint(0, len(shoot) - 1)
             return shoot[prob], 'shoot'
+        else:
+            prob = random.randint(0, len(unsafe) - 1)
+            return unsafe[prob], 'move'
 
 
 

@@ -227,6 +227,7 @@ class Explorer():
         infsys = InferenceSystem(len(self.grid))
         while True:
             percepts = self.sense(rowloc, colloc)
+            self.grid[rowloc][colloc] += '*'
             if percepts == 'dead':
                 print('dead')
                 print(infsys.KB)
@@ -249,7 +250,7 @@ class Explorer():
                 if self.grid[rowloc][colloc] == 'f':
                     infsys.updateKB(rowloc, colloc, percepts)
                     self.grid[rowloc][colloc] = 'v'
-                location, act = infsys.bestAction(rowloc, colloc)
+                location, act = infsys.bestAction(rowloc, colloc, self.move)
                 print(location, act)
                 for i in range(len(self.grid)):
                     print(self.grid[i])

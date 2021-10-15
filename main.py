@@ -15,6 +15,7 @@ def main():
     iss.bestAction(0,1)
     '''
     puzzle, arrows = WumpusWorldGen.generateGrid(WumpusWorldGen, 5, .2, .2, .2)
+
     start = WumpusWorldGen.startloc(WumpusWorldGen, puzzle)
     print(start)
     one = Explorer(puzzle, arrows)
