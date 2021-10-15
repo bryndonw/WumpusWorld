@@ -78,6 +78,7 @@ class Explorer():
             # shooting costs 10 points
             self.points -= 10
             self.shoot = True
+            self.arrows -= 1
             return curr_pos
 
         # moving forward costs 1 point
@@ -160,7 +161,8 @@ class Explorer():
                 return self.move + 1
             elif percepts == 'bump':
                 location = self.action([rowloc, colloc], [prevrow, prevcol], 'move')
-                self.move -= 1  #moving to wall and away from wall are counted, this should just be 1 move
+                self.move -= 3  # moving to wall and turning twice and moving away from wall are counted, this should just be 1 move
+                self.points += 3  # same for points
             prob = random.uniform(0,1)
             if percepts == []:  #no percepts means that every square around you is safe
                 if prob > arrow:    #if every square is safe safe and dangerous prob are combined
@@ -227,7 +229,6 @@ class Explorer():
         infsys = InferenceSystem(len(self.grid))
         while True:
             percepts = self.sense(rowloc, colloc)
-            self.grid[rowloc][colloc] += '*'
             if percepts == 'dead':
                 print('dead')
                 print(infsys.KB)

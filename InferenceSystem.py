@@ -107,10 +107,8 @@ class InferenceSystem():
             self.KB.append('w(' + str(rowloc) + ',' + str(colloc  - 1) + ')')
 
     def bestAction(self, rowloc, colloc, moves):
-
         if moves == ((self.gridsize * 10)/5):
             self.risk += .1
-
         actions = [[rowloc + 1, colloc], [rowloc - 1, colloc], [rowloc, colloc + 1], [rowloc, colloc - 1]]
         safeUnvisited = []
         safeVisited = []
@@ -122,10 +120,10 @@ class InferenceSystem():
                 pit = self.resolution(self.KB, '~p(' + str(act[0]) + ',' + str(act[1]) + ')')
                 obstacle = self.resolution(self.KB, '~o(' + str(act[0]) + ',' + str(act[1]) + ')')
                 visited = self.resolution(self.KB, '~v(' + str(act[0]) + ',' + str(act[1]) + ')')
-                print('wumpus', wumpus)
-                print('pit', pit)
-                print('obstacle', obstacle)
-                print('visited', visited)
+                #print('wumpus', wumpus)
+                #print('pit', pit)
+                #print('obstacle', obstacle)
+                #print('visited', visited)
                 if not visited and not wumpus and not pit and not obstacle:
                     safeUnvisited.append(act)
                 elif not wumpus and not pit and not obstacle and visited:
@@ -149,8 +147,10 @@ class InferenceSystem():
             prob = random.randint(0, len(shoot) - 1)
             return shoot[prob], 'shoot'
         else:
-            prob = random.randint(0, len(unsafe) - 1)
-            return unsafe[prob], 'move'
+            prob = random.randint(0, len(act) - 1)
+            while not (actions[prob][0] >= 0 and actions[prob][0] < self.gridsize and actions[prob][1] >= 0 and actions[prob][1] < self.gridsize):
+                prob = random.randint(0, len(act) - 1)
+            return actions[prob], 'move'
 
 
 
