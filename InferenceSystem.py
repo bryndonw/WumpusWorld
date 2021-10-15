@@ -20,95 +20,6 @@ class InferenceSystem():
         self.KB.append('~p(' + str(rowloc) + ',' + str(colloc) + ')')
         self.KB.append('~w(' + str(rowloc) + ',' + str(colloc) + ')')
 
-        if 's' in percepts:
-            replace = self.unify('s(row,col)', 's(' + str(rowloc) + ',' + str(colloc) + ')', z)
-            newreplace = replace.copy()
-            for key, val in replace.items():
-                newreplace[str(key) + '-1'] = int(val) - 1
-                newreplace[str(key) + '+1'] = int(val) + 1
-            check = self.rule['s(row,col)']
-            print(newreplace)
-            for key, val in newreplace.items().__reversed__():
-                check = check.replace(key, str(val))
-            check = check.replace(' ','')
-            check = check.split('&')
-            for fact in check:
-               if str(self.gridsize) in fact or str(-1) in fact:
-                    if '|' in fact:
-                        fact = fact.split('|')
-                        newfact = ''
-                        for f in fact:
-                            if str(self.gridsize) not in f and str(-1) not in f:
-                                newfact = newfact + f + '|'
-                        self.KB.append(newfact[:-1])
-               else:
-                    self.KB.append(fact)
-        else:
-            replace = self.unify('~s(row,col)', '~s(' + str(rowloc) + ',' + str(colloc) + ')', z)
-            newreplace = replace.copy()
-            for key, val in replace.items():
-                newreplace[str(key) + '-1'] = int(val) - 1
-                newreplace[str(key) + '+1'] = int(val) + 1
-            check = self.rule['~s(row,col)']
-            for key, val in newreplace.items().__reversed__():
-                check = check.replace(key, str(val))
-            check = check.replace(' ', '')
-            check = check.split('&')
-            for fact in check:
-                if str(self.gridsize) in fact or str(-1) in fact:
-                    if '|' in fact:
-                        fact = fact.split('|')
-                        newfact = ''
-                        for f in fact:
-                            if str(self.gridsize) not in f and str(-1) not in f:
-                                newfact = newfact + f + '|'
-                        self.KB.append(newfact[:-1])
-                else:
-                    self.KB.append(fact)
-        if 'b' in percepts:
-            replace = self.unify('b(row,col)', 'b(' + str(rowloc) + ',' + str(colloc) + ')', z)
-            newreplace = replace.copy()
-            for key, val in replace.items():
-                newreplace[str(key) + '-1'] = int(val) - 1
-                newreplace[str(key) + '+1'] = int(val) + 1
-            check = self.rule['b(row,col)']
-            for key, val in newreplace.items().__reversed__():
-                check = check.replace(key, str(val))
-            check = check.replace(' ', '')
-            check = check.split('&')
-            for fact in check:
-                if str(self.gridsize) in fact or str(-1) in fact:
-                    if '|' in fact:
-                        fact = fact.split('|')
-                        newfact = ''
-                        for f in fact:
-                            if str(self.gridsize) not in f and str(-1) not in f:
-                                newfact = newfact + f + '|'
-                        self.KB.append(newfact[:-1])
-                else:
-                    self.KB.append(fact)
-        else:
-            replace = self.unify('~b(row,col)', '~b(' + str(rowloc) + ',' + str(colloc) + ')', z)
-            newreplace = replace.copy()
-            for key, val in replace.items():
-                newreplace[str(key) + '-1'] = int(val) - 1
-                newreplace[str(key) + '+1'] = int(val) + 1
-            check = self.rule['~b(row,col)']
-            for key, val in newreplace.items().__reversed__():
-                check = check.replace(key, str(val))
-            check = check.replace(' ', '')
-            check = check.split('&')
-            for fact in check:
-                if str(self.gridsize) in fact or str(-1) in fact:
-                    if '|' in fact:
-                        fact = fact.split('|')
-                        newfact = ''
-                        for f in fact:
-                            if str(self.gridsize) not in f and str(-1) not in f:
-                                newfact = newfact + f + '|'
-                        self.KB.append(newfact[:-1])
-                else:
-                    self.KB.append(fact)
         if percepts == 'bump':
             replace = self.unify('bump(row,col)', 'bump(' + str(rowloc) + ',' + str(colloc) + ')', z)
             newreplace = replace.copy()
@@ -131,6 +42,97 @@ class InferenceSystem():
                         self.KB.append(newfact[:-1])
                 else:
                     self.KB.append(fact)
+        else:
+            if 's' in percepts:
+                replace = self.unify('s(row,col)', 's(' + str(rowloc) + ',' + str(colloc) + ')', z)
+                newreplace = replace.copy()
+                for key, val in replace.items():
+                    newreplace[str(key) + '-1'] = int(val) - 1
+                    newreplace[str(key) + '+1'] = int(val) + 1
+                check = self.rule['s(row,col)']
+                print(newreplace)
+                for key, val in newreplace.items().__reversed__():
+                    check = check.replace(key, str(val))
+                check = check.replace(' ','')
+                check = check.split('&')
+                for fact in check:
+                   if str(self.gridsize) in fact or str(-1) in fact:
+                        if '|' in fact:
+                            fact = fact.split('|')
+                            newfact = ''
+                            for f in fact:
+                                if str(self.gridsize) not in f and str(-1) not in f:
+                                    newfact = newfact + f + '|'
+                            self.KB.append(newfact[:-1])
+                   else:
+                        self.KB.append(fact)
+            else:
+                replace = self.unify('~s(row,col)', '~s(' + str(rowloc) + ',' + str(colloc) + ')', z)
+                newreplace = replace.copy()
+                for key, val in replace.items():
+                    newreplace[str(key) + '-1'] = int(val) - 1
+                    newreplace[str(key) + '+1'] = int(val) + 1
+                check = self.rule['~s(row,col)']
+                for key, val in newreplace.items().__reversed__():
+                    check = check.replace(key, str(val))
+                check = check.replace(' ', '')
+                check = check.split('&')
+                for fact in check:
+                    if str(self.gridsize) in fact or str(-1) in fact:
+                        if '|' in fact:
+                            fact = fact.split('|')
+                            newfact = ''
+                            for f in fact:
+                                if str(self.gridsize) not in f and str(-1) not in f:
+                                    newfact = newfact + f + '|'
+                            self.KB.append(newfact[:-1])
+                    else:
+                        self.KB.append(fact)
+            if 'b' in percepts:
+                replace = self.unify('b(row,col)', 'b(' + str(rowloc) + ',' + str(colloc) + ')', z)
+                newreplace = replace.copy()
+                for key, val in replace.items():
+                    newreplace[str(key) + '-1'] = int(val) - 1
+                    newreplace[str(key) + '+1'] = int(val) + 1
+                check = self.rule['b(row,col)']
+                for key, val in newreplace.items().__reversed__():
+                    check = check.replace(key, str(val))
+                check = check.replace(' ', '')
+                check = check.split('&')
+                for fact in check:
+                    if str(self.gridsize) in fact or str(-1) in fact:
+                        if '|' in fact:
+                            fact = fact.split('|')
+                            newfact = ''
+                            for f in fact:
+                                if str(self.gridsize) not in f and str(-1) not in f:
+                                    newfact = newfact + f + '|'
+                            self.KB.append(newfact[:-1])
+                    else:
+                        self.KB.append(fact)
+            else:
+                replace = self.unify('~b(row,col)', '~b(' + str(rowloc) + ',' + str(colloc) + ')', z)
+                newreplace = replace.copy()
+                for key, val in replace.items():
+                    newreplace[str(key) + '-1'] = int(val) - 1
+                    newreplace[str(key) + '+1'] = int(val) + 1
+                check = self.rule['~b(row,col)']
+                for key, val in newreplace.items().__reversed__():
+                    check = check.replace(key, str(val))
+                check = check.replace(' ', '')
+                check = check.split('&')
+                for fact in check:
+                    if str(self.gridsize) in fact or str(-1) in fact:
+                        if '|' in fact:
+                            fact = fact.split('|')
+                            newfact = ''
+                            for f in fact:
+                                if str(self.gridsize) not in f and str(-1) not in f:
+                                    newfact = newfact + f + '|'
+                            self.KB.append(newfact[:-1])
+                    else:
+                        self.KB.append(fact)
+        self.KB = list(set(self.KB))
 
     def unify(self, x, y, z):
        x = re.split(r'[(,)]\s*', x)
