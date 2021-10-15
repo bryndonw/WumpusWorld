@@ -24,8 +24,10 @@ class InferenceSystem():
             replace = self.unify('s(row,col)', 's(' + str(rowloc) + ',' + str(colloc) + ')', z)
             newreplace = replace.copy()
             for key, val in replace.items():
-                newreplace[str(key) + '-1'] = int(val) - 1
-                newreplace[str(key) + '+1'] = int(val) + 1
+                if int(val) - 1 >= 0:
+                    newreplace[str(key) + '-1'] = int(val) - 1
+                if int(val) + 1 < self.gridsize:
+                    newreplace[str(key) + '+1'] = int(val) + 1
             check = self.rule['s(row,col)']
             for key, val in newreplace.items().__reversed__():
                 check = check.replace(key, str(val))
