@@ -6,13 +6,13 @@ import random
 from InferenceSystem import InferenceSystem
 
 def main():
-    puzzle, arrows = WumpusWorldGen.generateGrid(WumpusWorldGen, 25, .05, .05, .15) #ppit, pwumpus, pobstacle
+    puzzle, arrows = WumpusWorldGen.generateGrid(WumpusWorldGen, 5, .05, .05, .15) #ppit, pwumpus, pobstacle
 
     start = WumpusWorldGen.startloc(WumpusWorldGen, puzzle)
-    print(start)
     one = Explorer(puzzle, arrows)
+    print(start)
     test = one.inferenceAgent(start[0], start[1])
-    print(test)
+    print("Moves: ", test)
 
 
 

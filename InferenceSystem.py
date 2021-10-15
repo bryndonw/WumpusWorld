@@ -49,7 +49,6 @@ class InferenceSystem():
                     newreplace[str(key) + '-1'] = int(val) - 1
                     newreplace[str(key) + '+1'] = int(val) + 1
                 check = self.rule['s(row,col)']
-                print(newreplace)
                 for key, val in newreplace.items().__reversed__():
                     check = check.replace(key, str(val))
                 check = check.replace(' ','')
@@ -155,7 +154,7 @@ class InferenceSystem():
             self.KB.append('w(' + str(rowloc) + ',' + str(colloc  - 1) + ')')
 
     def bestAction(self, rowloc, colloc, moves):
-        print(self.KB)
+        print('KB', self.KB)
         actions = [[rowloc + 1, colloc], [rowloc - 1, colloc], [rowloc, colloc + 1], [rowloc, colloc - 1]]
         safeUnvisited = []
         safeVisited = []
@@ -167,10 +166,11 @@ class InferenceSystem():
                 pit = self.resolution(self.KB, '~p(' + str(act[0]) + ',' + str(act[1]) + ')')
                 obstacle = self.resolution(self.KB, '~o(' + str(act[0]) + ',' + str(act[1]) + ')')
                 visited = self.resolution(self.KB, '~v(' + str(act[0]) + ',' + str(act[1]) + ')')
-                print('wumpus', wumpus)
-                print('pit', pit)
-                print('obstacle', obstacle)
-                print('visited', visited)
+                print('\n', act)
+                print('wumpus\t|', wumpus)
+                print('pit\t\t|', pit)
+                print('obstacle|', obstacle)
+                print('visited\t|', visited)
                 if not visited and not wumpus and not pit and not obstacle:
                     safeUnvisited.append(act)
                 elif not wumpus and not pit and not obstacle and visited:
