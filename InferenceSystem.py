@@ -19,6 +19,7 @@ class InferenceSystem():
         self.KB.append('v(' + str(rowloc) + ',' + str(colloc) + ')')
         self.KB.append('~p(' + str(rowloc) + ',' + str(colloc) + ')')
         self.KB.append('~w(' + str(rowloc) + ',' + str(colloc) + ')')
+
         if 's' in percepts:
             replace = self.unify('s(row,col)', 's(' + str(rowloc) + ',' + str(colloc) + ')', z)
             newreplace = replace.copy()
@@ -107,12 +108,13 @@ class InferenceSystem():
             self.KB.append('w(' + str(rowloc) + ',' + str(colloc  - 1) + ')')
 
     def bestAction(self, rowloc, colloc, moves):
+        print(self.KB)
         if moves == ((self.gridsize * 10)/5):
             self.risk += .1
         actions = [[rowloc + 1, colloc], [rowloc - 1, colloc], [rowloc, colloc + 1], [rowloc, colloc - 1]]
         safeUnvisited = []
         safeVisited = []
-        shoot = [] #is this really a list ?
+        shoot = []
         unsafe = []
         for act in actions:
             if act[0] >= 0 and act[0] < self.gridsize and act[1] >= 0 and act[1] < self.gridsize:
@@ -120,10 +122,10 @@ class InferenceSystem():
                 pit = self.resolution(self.KB, '~p(' + str(act[0]) + ',' + str(act[1]) + ')')
                 obstacle = self.resolution(self.KB, '~o(' + str(act[0]) + ',' + str(act[1]) + ')')
                 visited = self.resolution(self.KB, '~v(' + str(act[0]) + ',' + str(act[1]) + ')')
-                #print('wumpus', wumpus)
-                #print('pit', pit)
-                #print('obstacle', obstacle)
-                #print('visited', visited)
+                print('wumpus', wumpus)
+                print('pit', pit)
+                print('obstacle', obstacle)
+                print('visited', visited)
                 if not visited and not wumpus and not pit and not obstacle:
                     safeUnvisited.append(act)
                 elif not wumpus and not pit and not obstacle and visited:
@@ -135,9 +137,11 @@ class InferenceSystem():
         prob_move = random.uniform(0,1)
 
         if len(safeUnvisited) != 0:
+            print('unvisisted')
             prob = random.randint(0, len(safeUnvisited) - 1)
             return safeUnvisited[prob], 'move'
         elif len(safeVisited) != 0 and prob_move >= self.risk:
+            print('visited')
             prob = random.randint(0, len(safeVisited) - 1)
             return safeVisited[prob], 'move'
         elif len(unsafe) != 0 and prob_move < self.risk:
@@ -203,20 +207,23 @@ class InferenceSystem():
         for d1 in clause1dis:
             for d2 in clause2dis:
                 if d1 == '~' + d2 or '~' + d1 == d2:
-                    #isnt making them disjuntins again
-                    if clause2dis.copy().remove(d2) != None and clause1dis.copy().remove(d1) == None:
+                    check2 = clause2dis.copy()
+                    check2.remove(d2)
+                    check1 = clause1dis.copy()
+                    check1.remove(d1)
+                    if check2 != [] and check1 == []:
                         out = ''
-                        for item in list(set(clause1dis.copy().remove(d1))):
+                        for item in list(set(check2)):
                             out = out + item + '|'
                         clauses.append(out[:-1])
-                    if clause2dis.copy().remove(d2) == None and clause1dis.copy().remove(d1) != None:
+                    if check2 == [] and check1 != []:
                         out = ''
-                        for item in list(set(clause1dis.copy().remove(d1))):
+                        for item in list(set(check1)):
                             out = out + item + '|'
                         clauses.append(out[:-1])
-                    if clause2dis.copy().remove(d2) != None and clause1dis.copy().remove(d1) != None:
+                    if check2 != [] and check1 != []:
                         out = ''
-                        for item in list(set(clause1dis.copy().remove(d1) + clause2dis.copy().remove(d2))):
+                        for item in list(set(check1 + check2)):
                             out = out + item + '|'
                         clauses.append(out[:-1])
                     resolving = True
