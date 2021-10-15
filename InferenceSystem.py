@@ -12,7 +12,6 @@ class InferenceSystem():
                      '~bump(row,col)': '~o(row,col)'}
 
         self.KB = []
-        self.risk = 0
 
     def updateKB(self, rowloc, colloc, percepts):
         z = []
@@ -157,8 +156,6 @@ class InferenceSystem():
 
     def bestAction(self, rowloc, colloc, moves):
         print(self.KB)
-        if moves == ((self.gridsize * 10)/5):
-            self.risk += .1
         actions = [[rowloc + 1, colloc], [rowloc - 1, colloc], [rowloc, colloc + 1], [rowloc, colloc - 1]]
         safeUnvisited = []
         safeVisited = []
@@ -188,11 +185,11 @@ class InferenceSystem():
             print('unvisisted')
             prob = random.randint(0, len(safeUnvisited) - 1)
             return safeUnvisited[prob], 'move'
-        elif len(safeVisited) != 0 and prob_move >= self.risk:
+        elif len(safeVisited) != 0:
             print('visited')
             prob = random.randint(0, len(safeVisited) - 1)
             return safeVisited[prob], 'move'
-        elif len(unsafe) != 0 and prob_move < self.risk:
+        elif len(unsafe) != 0:
             prob = random.randint(0, len(unsafe) - 1)
             return unsafe[prob], 'move'
         elif len(shoot) != 0:
