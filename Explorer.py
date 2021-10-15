@@ -101,6 +101,8 @@ class Explorer():
                     senses.append('b')
         if 'w' in self.grid[rowloc][colloc]:
             senses = 'dead'
+        elif 'p' in self.grid[rowloc][colloc]:
+            senses = 'dead'
         elif 'g' in self.grid[rowloc][colloc]:
             senses = 'win'
         elif 'o' in self.grid[rowloc][colloc]:
@@ -227,12 +229,14 @@ class Explorer():
             percepts = self.sense(rowloc, colloc)
             if percepts == 'dead':
                 print('dead')
+                print(infsys.KB)
                 return self.move
             elif percepts == 'win':
                 print('won')
                 return self.move + 1
             elif percepts == 'bump':
                 #update KB
+                print('bump')
                 infsys.updateKB(rowloc, colloc, percepts)
                 newpos = self.action([rowloc, colloc], [prevrow, prevcol], 'move')
                 rowloc = newpos[0]
@@ -240,13 +244,15 @@ class Explorer():
                 self.move -= 3  # moving to wall and turning twice and moving away from wall are counted, this should just be 1 move
                 self.points += 3    #same for points
             elif percepts == 'scream':
-                InferenceSystem.updateKBshot(rowloc, colloc, self.facing)
+                infsys.updateKBshot(rowloc, colloc, self.facing)
             else:
                 if self.grid[rowloc][colloc] == 'f':
                     infsys.updateKB(rowloc, colloc, percepts)
                     self.grid[rowloc][colloc] = 'v'
                 location, act = infsys.bestAction(rowloc, colloc)
-                print(location)
+                print(location, act)
+                for i in range(len(self.grid)):
+                    print(self.grid[i])
                 prevrow = rowloc
                 prevcol = colloc
                 newpos = self.action([rowloc, colloc], location, act)

@@ -11,11 +11,14 @@ class InferenceSystem():
                      'bump(row,col)': 'o(row,col)',
                      '~bump(row,col)': '~o(row,col)'}
 
-        self.KB = ['w(2,3)']
+        self.KB = []
+        self.risk = 0
 
     def updateKB(self, rowloc, colloc, percepts):
         z = []
         self.KB.append('v(' + str(rowloc) + ',' + str(colloc) + ')')
+        self.KB.append('~p(' + str(rowloc) + ',' + str(colloc) + ')')
+        self.KB.append('~w(' + str(rowloc) + ',' + str(colloc) + ')')
         if 's' in percepts:
             replace = self.unify('s(row,col)', 's(' + str(rowloc) + ',' + str(colloc) + ')', z)
             newreplace = replace.copy()
@@ -95,13 +98,13 @@ class InferenceSystem():
 
     def updateKBshot(self, rowloc, colloc, facing):
         if facing == 1:
-            self.KB.append('w(' + rowloc - 1 + ',' + colloc + ')')
+            self.KB.append('w(' + str(rowloc - 1) + ',' + str(colloc) + ')')
         elif facing == 2:
-            self.KB.append('w(' + rowloc + ',' + colloc  + 1 + ')')
+            self.KB.append('w(' + str(rowloc) + ',' + str(colloc  + 1) + ')')
         elif facing == 3:
-            self.KB.append('w(' + rowloc + 1 + ',' + colloc + ')')
+            self.KB.append('w(' + str(rowloc + 1) + ',' + str(colloc) + ')')
         elif facing == 4:
-            self.KB.append('w(' + rowloc + ',' + colloc  - 1 + ')')
+            self.KB.append('w(' + str(rowloc) + ',' + str(colloc  - 1) + ')')
 
     def bestAction(self, rowloc, colloc):
         actions = [[rowloc + 1, colloc], [rowloc - 1, colloc], [rowloc, colloc + 1], [rowloc, colloc - 1]]
@@ -123,22 +126,22 @@ class InferenceSystem():
                     safeUnvisited.append(act)
                 elif not wumpus and not pit and not obstacle and visited:
                     safeVisited.append(act)
-                elif wumpus and not visited and not obstacle and not pit:
-                    shoot.append(act)
                 elif wumpus or pit:
                     unsafe.append(act)
+                elif wumpus and not visited and not obstacle and not pit:
+                    shoot.append(act)
         if len(safeUnvisited) != 0:
             prob = random.randint(0, len(safeUnvisited) - 1)
             return safeUnvisited[prob], 'move'
         elif len(safeVisited) != 0:
             prob = random.randint(0, len(safeVisited) - 1)
             return safeVisited[prob], 'move'
-        elif len(shoot) != 0:
-            prob = random.randint(0, len(shoot) - 1)
-            return shoot[prob], 'shoot'
         elif len(unsafe) != 0:
             prob = random.randint(0, len(unsafe) - 1)
             return unsafe[prob], 'move'
+        elif len(shoot) != 0:
+            prob = random.randint(0, len(shoot) - 1)
+            return shoot[prob], 'shoot'
 
 
 
@@ -173,12 +176,12 @@ class InferenceSystem():
 
     def resolve(self, clause1, clause2):
         clauses = []
-        clause1.replace('{', "")
-        clause1.replace('}', "")
-        clause1.replace(' ', "")
-        clause2.replace('{', "")
-        clause2.replace('}', "")
-        clause2.replace(' ', "")
+        clause1 = clause1.replace('{', "")
+        clause1 = clause1.replace('}', "")
+        clause1 = clause1.replace(' ', "")
+        clause2 = clause2.replace('{', "")
+        clause2 = clause2.replace('}', "")
+        clause2 = clause2.replace(' ', "")
         if '|' in clause1:
             clause1dis = clause1.split('|')
         else:
@@ -193,14 +196,20 @@ class InferenceSystem():
                 if d1 == '~' + d2 or '~' + d1 == d2:
                     #isnt making them disjuntins again
                     if clause2dis.copy().remove(d2) != None and clause1dis.copy().remove(d1) == None:
+                        out = ''
                         for item in list(set(clause1dis.copy().remove(d1))):
-                            clauses.append(item)
+                            out = out + item + '|'
+                        clauses.append(out[:-1])
                     if clause2dis.copy().remove(d2) == None and clause1dis.copy().remove(d1) != None:
+                        out = ''
                         for item in list(set(clause1dis.copy().remove(d1))):
-                            clauses.append(item)
+                            out = out + item + '|'
+                        clauses.append(out[:-1])
                     if clause2dis.copy().remove(d2) != None and clause1dis.copy().remove(d1) != None:
+                        out = ''
                         for item in list(set(clause1dis.copy().remove(d1) + clause2dis.copy().remove(d2))):
-                            clauses.append(item)
+                            out = out + item + '|'
+                        clauses.append(out[:-1])
                     resolving = True
         if resolving == True:
             return clauses

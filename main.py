@@ -14,7 +14,7 @@ def main():
     iss.updateKB(2, 1, ['s'])
     iss.bestAction(0,1)
     '''
-    puzzle, arrows = WumpusWorldGen.generateGrid(WumpusWorldGen, 5, .1, .1, .1)
+    puzzle, arrows = WumpusWorldGen.generateGrid(WumpusWorldGen, 5, .2, .2, .2)
     start = WumpusWorldGen.startloc(WumpusWorldGen, puzzle)
     print(start)
     one = Explorer(puzzle, arrows)
