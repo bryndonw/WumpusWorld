@@ -19,7 +19,7 @@ def main():
     start = WumpusWorldGen.startloc(WumpusWorldGen, puzzle)
     print(start)
     one = Explorer(puzzle, arrows)
-    test = one.inferenceAgent(start[0], start[1])
+    test = one.inferenceAgent(4,4)      #start[0], start[1])
     print(test)
 
 
