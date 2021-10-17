@@ -157,7 +157,7 @@ class Explorer():
 
                 rowloc = prevrow
                 colloc = prevcol
-                print('bump, move back to', rowloc, colloc)
+                #print('bump, move back to', rowloc, colloc)
 
             prob = random.uniform(0,1)
             if percepts == []:  #no percepts means that every square around you is safe
@@ -231,7 +231,7 @@ class Explorer():
             if percepts == 'dead':
                 self.points -= 1000
                 print('dead')
-                print(infsys.KB)
+                #print(infsys.KB)
                 self.finishGame()
                 return self.cells
             elif percepts == 'win':
@@ -254,9 +254,9 @@ class Explorer():
                     infsys.updateKB(rowloc, colloc, percepts)
                     self.grid[rowloc][colloc] = 'v'
                 location, act = infsys.bestAction(rowloc, colloc, self.cells)
-                print(location, act)
-                for i in range(len(self.grid)):
-                    print(self.grid[i])
+                #print(location, act)
+                #for i in range(len(self.grid)):
+                #    print(self.grid[i])
                 prevrow = rowloc
                 prevcol = colloc
                 newpos = self.action([rowloc, colloc], location, act)

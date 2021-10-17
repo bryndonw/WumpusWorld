@@ -154,7 +154,7 @@ class InferenceSystem():
             self.KB.append('w(' + str(rowloc) + ',' + str(colloc  - 1) + ')')
 
     def bestAction(self, rowloc, colloc, moves):
-        print('KB', self.KB)
+        print(self.KB)
         actions = [[rowloc + 1, colloc], [rowloc - 1, colloc], [rowloc, colloc + 1], [rowloc, colloc - 1]]
         safeUnvisited = []
         safeVisited = []
@@ -186,7 +186,7 @@ class InferenceSystem():
             prob = random.randint(0, len(safeUnvisited) - 1)
             return safeUnvisited[prob], 'move'
         elif len(safeVisited) != 0:
-            print('visited')
+            #('visited')
             prob = random.randint(0, len(safeVisited) - 1)
             return safeVisited[prob], 'move'
         elif len(unsafe) != 0:
