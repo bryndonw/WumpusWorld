@@ -148,13 +148,13 @@ class Explorer():
                 print("dead")
                 self.points -= 1000
                 self.finishGame()
-                return self.cells
+                return self.cells, self.points
             elif percepts == 'win':
                 print('won')
                 # picking up the gold costs 1 point and is 1 move, but we also get 100 points for winning
                 self.points += 99
                 self.finishGame()
-                return self.cells
+                return self.cells, self.points
             elif percepts == 'bump':
                 # since we never make it into an obstacle, we remove one from the cells explored
                 self.cells -= 1
@@ -222,7 +222,7 @@ class Explorer():
             rowloc = location[0]
             colloc = location[1]
         # we shouldn't get here
-        return self.cells
+        return self.cells, self.points
 
 
 
@@ -237,13 +237,13 @@ class Explorer():
                 print('dead')
                 #print(infsys.KB)
                 self.finishGame()
-                return self.cells
+                return self.cells, self.points
             elif percepts == 'win':
                 # if we will, we take off 1 point for grabbing the gold and get 99 points for winning
                 self.points += 99
                 print('won')
                 self.finishGame()
-                return self.cells
+                return self.cells, self.points
             elif percepts == 'bump':
                 #update KB
                 infsys.updateKB(rowloc, colloc, percepts)
@@ -266,4 +266,5 @@ class Explorer():
                 newpos = self.action([rowloc, colloc], location, act)
                 rowloc = newpos[0]
                 colloc = newpos[1]
+        return self.cells, self.points
 
