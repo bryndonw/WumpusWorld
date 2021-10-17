@@ -8,7 +8,7 @@ class InferenceSystem():
                      '~b(row,col)': '~b(row,col) & ~p(row-1,col) & ~p(row+1,col) & ~p(row,col-1) & ~p(row,col+1)',
                      's(row,col)': 's(row,col) & {w(row-1, col) | w(row+1, col) | w(row, col-1) | w(row, col+1)}',
                      'b(row,col)': 'b(row,col) & {p(row-1, col) | p(row+1, col) | p(row, col-1) | p(row, col+1)}',
-                     'bump(row,col)': 'o(row,col)',
+                     'bump(row,col)': 'o(row,col) & ~w(row,col) & ~p(row,col)',
                      '~bump(row,col)': '~o(row,col)'}
 
         self.KB = []
@@ -154,7 +154,7 @@ class InferenceSystem():
             self.KB.append('w(' + str(rowloc) + ',' + str(colloc  - 1) + ')')
 
     def bestAction(self, rowloc, colloc, moves):
-        print(self.KB)
+        #print(self.KB)
         actions = [[rowloc + 1, colloc], [rowloc - 1, colloc], [rowloc, colloc + 1], [rowloc, colloc - 1]]
         safeUnvisited = []
         safeVisited = []
@@ -166,11 +166,11 @@ class InferenceSystem():
                 pit = self.resolution(self.KB, '~p(' + str(act[0]) + ',' + str(act[1]) + ')')
                 obstacle = self.resolution(self.KB, '~o(' + str(act[0]) + ',' + str(act[1]) + ')')
                 visited = self.resolution(self.KB, '~v(' + str(act[0]) + ',' + str(act[1]) + ')')
-                print('\n', act)
-                print('wumpus\t|', wumpus)
-                print('pit\t\t|', pit)
-                print('obstacle|', obstacle)
-                print('visited\t|', visited)
+                #print('\n', act)
+                #print('wumpus\t|', wumpus)
+                #print('pit\t\t|', pit)
+                #print('obstacle|', obstacle)
+                #print('visited\t|', visited)
                 if not visited and not wumpus and not pit and not obstacle:
                     safeUnvisited.append(act)
                 elif not wumpus and not pit and not obstacle and visited:
@@ -182,7 +182,7 @@ class InferenceSystem():
         prob_move = random.uniform(0,1)
 
         if len(safeUnvisited) != 0:
-            print('unvisisted')
+            #('unvisisted')
             prob = random.randint(0, len(safeUnvisited) - 1)
             return safeUnvisited[prob], 'move'
         elif len(safeVisited) != 0:

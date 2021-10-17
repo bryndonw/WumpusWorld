@@ -6,11 +6,13 @@ def main():
 
     start = WumpusWorldGen.startloc(WumpusWorldGen, puzzle)
     one = Explorer(puzzle, arrows)
+    two = Explorer(puzzle, arrows)
     print("Reactive Agent")
     test1 = one.reactiveAgent(start[0], start[1])
-    print("Moves: ", test1)
-    test2 = one.inferenceAgent(start[0], start[1])
-    print("Moves: ", test2)
+    #print("Moves: ", test1)
+    print("Inference Agent")
+    test2 = two.inferenceAgent(start[0], start[1])
+    #print("Moves: ", test2)
 
 
 

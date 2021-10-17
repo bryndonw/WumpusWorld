@@ -73,7 +73,7 @@ class Explorer():
             return curr_pos
 
         # moving forward costs 1 point and we enter a cell
-        print('moved to ', next_pos)
+        #print('moved to ', next_pos)
         self.points -= 1
         self.cells += 1
         # we return current position
