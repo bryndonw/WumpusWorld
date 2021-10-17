@@ -13,6 +13,7 @@ class Explorer():
         self.facing = 1
         self.cells = 0 #counts everytime we move to a new cell and everytime we shoot
         self.shoot = False
+        self.cap = len(grid)*len(grid) * 3
 
     def action(self, curr_pos, next_pos, act):
         # act is either shoot, or move (for every shoot or move, action will turn if needed).
@@ -102,6 +103,9 @@ class Explorer():
             senses = 'win'
         elif 'o' in self.grid[rowloc][colloc]:
             senses = 'bump'
+        elif self.cells == self.cap:
+            print('Starved to death in a cave')
+            senses = 'dead'
         return senses
 
     def shot(self, rowloc, colloc):
