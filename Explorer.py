@@ -134,8 +134,8 @@ class Explorer():
     def finishGame(self):
         print('Points:\t', self.points)
         print('Cells visited:',self.cells)
-        for g in self.grid:
-            print(g)
+        #for g in self.grid:
+        #    print(g)
 
     def reactiveAgent(self, rowloc, colloc):
         prevrow = rowloc

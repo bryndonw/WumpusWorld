@@ -31,8 +31,8 @@ class WumpusWorldGen():
                 grid[row][col] = 'g'
                 done = True
 
-        for i in range(size):
-            print(grid[i])
+        #for i in range(size):
+        #print(grid[i])
 
         return grid, arrows
 

@@ -7,7 +7,7 @@ def main():
     cellstot2 = 0
     pointstot2 = 0
     for i in range(10):
-        puzzle, arrows = WumpusWorldGen.generateGrid(WumpusWorldGen, 5, .05, .05, .15) #ppit, pwumpus, pobstacle
+        puzzle, arrows = WumpusWorldGen.generateGrid(WumpusWorldGen, 25, .02, .02, .2) #ppit, pwumpus, pobstacle
 
         start = WumpusWorldGen.startloc(WumpusWorldGen, puzzle)
         one = Explorer(puzzle, arrows)
